@@ -4,6 +4,9 @@
 # Libraries
 /vendor/*
 
+# Docker
+/data/*
+
 # Generated files
 .project
 .cache

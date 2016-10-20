@@ -1,0 +1,11 @@
+.git
+.idea
+app/logs/*
+app/cache/*
+build/*
+!build/docker/*
+deploy/*
+gulp/*
+node_modules/*
+scripts/*
+test*/*
