@@ -1,9 +1,6 @@
 FROM php:7.0-apache
 MAINTAINER Fork CMS <info@fork-cms.com>
 
-COPY . /var/www/html/
-RUN chown -R www-data:www-data /var/www/html/
-
 # Install MCrypt
 RUN apt-get update \
     && apt-get install -y libmcrypt-dev \
@@ -28,3 +25,15 @@ ENV APACHE_DOC_ROOT /var/www/html
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
+
+# Bundle source code
+COPY . /var/www/html/
+
+# Install app dependencies
+RUN cd /var/www/html && /usr/local/bin/composer install --optimize-autoloader --prefer-dist --no-dev --no-interaction --no-scripts
+
+# Give apache write access to host
+RUN chown -R www-data:www-data /var/www/html/
+
+EXPOSE 80
+EXPOSE 443
