@@ -5,8 +5,8 @@ app/cache/*
 app/config/parameters.yml
 build/*
 !build/docker/*
-src/Backend/Cache/*
-src/Frontend/Cache/*
+src/Backend/Cache/*/*
+src/Frontend/Cache/*/*
 deploy/*
 gulp/*
 node_modules/*
