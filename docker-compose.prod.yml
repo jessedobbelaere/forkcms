@@ -8,12 +8,13 @@ services:
             - "80:80"
             - "443:443"
         volumes:
-            - ./data/files:/var/www/html:rw
+            - ./data/config/parameters.yml:/var/www/html/app/config/parameters.yml:rw
+            - ./data/files:/var/www/html/src/Frontend/Files:rw
         links:
             - db
         environment:
-            - FORK_DEBUG=1
-            - FORK_ENV=dev
+            - FORK_DEBUG=0
+            - FORK_ENV=prod
 
     db:
         image: mariadb
