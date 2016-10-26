@@ -19,8 +19,6 @@ services:
     db:
         image: mariadb
         restart: always
-        ports:
-            - '3306:3306'
         environment:
             - MYSQL_DATABASE=fork_cms
             - MYSQL_USER=fork_cms_user
