@@ -1,0 +1,16 @@
+.git
+.idea
+app/logs/*
+app/cache/*
+app/config/parameters.yml
+build/*
+!build/docker/*
+src/Backend/Cache/*/*
+src/Frontend/Cache/*/*
+src/Frontend/Files/*
+deploy/*
+gulp/*
+node_modules/*
+scripts/*
+test*/*
+vendor/*
