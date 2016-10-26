@@ -1,6 +1,8 @@
 FROM php:7.0-apache
 MAINTAINER Fork CMS <info@fork-cms.com>
 
+WORKDIR /var/www/html
+
 # Install the PHP extensions we need
 RUN apt-get update && apt-get install -y libpng12-dev libjpeg-dev libmcrypt-dev libicu-dev && rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
@@ -21,14 +23,25 @@ RUN { \
 RUN a2enmod rewrite
 
 # Configure Apache Document Root
-ENV APACHE_DOC_ROOT /var/www/html
+ENV APACHE_DOC_ROOT ./
 
-# Bundle source code
-COPY . /var/www/html/
+# Install composer and install dependencies. Instead of copying the source files, we first copy composer.json and the lock to speed-up the build.
+# They will rarely change or invalidate the docker cache.
+RUN curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer
+COPY composer.json ./
+COPY composer.lock ./
+RUN composer install --no-scripts --no-interaction --no-autoloader
 
-# Install composer and install the app dependencies
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-RUN cd /var/www/html && /usr/local/bin/composer install --optimize-autoloader --prefer-dist --no-dev --no-interaction --no-scripts
+# Bundle source code into container
+COPY . ./
+
+# Dump the autoloader
+RUN composer dump-autoload --optimize && \
+	composer run-script post-install-cmd
 
 # Give apache write access to host
-RUN chown -R www-data:www-data /var/www/html/
+RUN chown -R www-data:www-data ./
+
+# Make entrypoint executable
+RUN chmod +x ./tools/docker-entrypoint.sh
