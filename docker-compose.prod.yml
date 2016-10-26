@@ -9,12 +9,14 @@ services:
             - "443:443"
         volumes:
             - ./data/config/parameters.yml:/var/www/html/app/config/parameters.yml:rw
-            - ./data/files:/var/www/html/src/Frontend/Files:rw
+            - ./data/logs/:/var/www/html/app/logs:rw
+            - ./data/files/:/var/www/html/src/Frontend/Files:rw
         links:
             - db
         environment:
             - FORK_DEBUG=0
             - FORK_ENV=prod
+        entrypoint: ./tools/docker-entrypoint.sh
 
     db:
         image: mariadb
